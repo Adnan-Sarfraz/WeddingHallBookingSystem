@@ -1,17 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WeddingHall.Application.DTOs.Hall;
 using WeddingHall.Application.Interfaces;
+using WeddingHall.Application.Interfaces.Repositories;
 using WeddingHall.Domain;
 
 namespace WeddingHall.Infrastructure.Services
 {
     public class HallService : IHallService
     {
-        private readonly ApplicationDbContext _db;
-
-        public HallService(ApplicationDbContext db)
+        //private readonly ApplicationDbContext _db;
+        private readonly IHallRepository _hallRepository;
+        public HallService(IHallRepository hallRepository)
         {
-            _db = db;
+            _hallRepository = hallRepository;
+
         }
 
         //creation of new HallMaster ( POST )
@@ -31,37 +33,36 @@ namespace WeddingHall.Infrastructure.Services
                 isActive = true
             };
 
-            _db.HallMasters.Add(hall);
-            await _db.SaveChangesAsync();
+
+            await _hallRepository.AddAsync(hall);
+            await _hallRepository.SaveChangesAsync();
             return true;
         }
-        //Get All ( GET )
 
+
+        //Get All ( GET )
         public async Task<List<HallResponse>> GetAllHallsAsync()
         {
-            return await _db.HallMasters
-                .Include(x => x.City)
-                .Include(x => x.District)
-                .Select(h => new HallResponse
-                {
-                    GUID = h.GUID,
-                    HallName = h.HallName,
-                    HallAddress = h.HallAddress,
-                    CityName = h.City!.CityName,
-                    DistrictName = h.District!.DistrictName,
-                    IsActive = h.isActive
-                })
-                .ToListAsync();
+            var halls = await _hallRepository.GetAllWithDetailsAsync();
+
+            return halls.Select(h => new HallResponse
+            {
+                GUID = h.GUID,
+                HallName = h.HallName,
+                HallAddress = h.HallAddress,
+                CityName = h.City?.CityName ?? string.Empty,
+                DistrictName = h.District?.DistrictName ?? string.Empty,
+                IsActive = h.isActive
+            }).ToList();
+
         }
+
 
 
         //Get by ID ( GET )
         public async Task<HallResponse?> GetHallByIdAsync(Guid id)
         {
-            var hall = await _db.HallMasters
-                .Include(x => x.City)
-                .Include(x => x.District)
-                .FirstOrDefaultAsync(x => x.GUID == id);
+            var hall = await _hallRepository.GetByIdWithDetailsAsync(id);
 
             if (hall == null)
                 return null;
@@ -71,15 +72,17 @@ namespace WeddingHall.Infrastructure.Services
                 GUID = hall.GUID,
                 HallName = hall.HallName,
                 HallAddress = hall.HallAddress,
-                CityName = hall.City!.CityName,
-                DistrictName = hall.District!.DistrictName,
+                CityName = hall.City?.CityName ?? string.Empty,
+                DistrictName = hall.District?.DistrictName ?? string.Empty,
                 IsActive = hall.isActive
             };
         }
+
+
         //Update ( PUT )
         public async Task<bool> UpdateHallAsync(HallUpdateRequest request)
         {
-            var hall = await _db.HallMasters.FindAsync(request.GUID);
+            var hall = await _hallRepository.GetByIdAsync(request.GUID);
 
             if (hall == null)
                 return false;
@@ -92,19 +95,26 @@ namespace WeddingHall.Infrastructure.Services
             hall.Updated_By = request.Updated_By;
             hall.Updated_Date = DateTime.Now;
 
-            await _db.SaveChangesAsync();
-            return true;
+            _hallRepository.Update(hall);
+            await _hallRepository.SaveChangesAsync();
+
+            return true; 
+
         }
+
+
         ////Delete User ( DELETE )
         public async Task<bool> DeleteHallAsync(Guid id)
         {
-            var hall = await _db.HallMasters.FindAsync(id);
+            var hall = await _hallRepository.GetByIdAsync(id);
 
             if (hall == null)
                 return false;
 
             hall.isActive = false; //this directly/softly deletes 
-            await _db.SaveChangesAsync();
+
+            _hallRepository.Update(hall);
+            await _hallRepository.SaveChangesAsync();
             return true;
         }
     }

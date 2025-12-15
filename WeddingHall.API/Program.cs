@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Infrastructure;
 using WeddingHall.Infrastructure.Services;
+using WeddingHall.Application.Interfaces.Repositories;
+using WeddingHall.Infrastructure.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISubHallService, SubHallService>();
+
+//Repository layer 
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IHallRepository, HallRepository>();
 
 
 

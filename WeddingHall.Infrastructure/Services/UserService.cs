@@ -8,35 +8,40 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WeddingHall.Application.DTOs.SignIn;
-using WeddingHall.Application.Interfaces;
-using WeddingHall.Domain;
 using WeddingHall.Application.DTOs.UserRegistration;
+using WeddingHall.Application.Interfaces;
+using WeddingHall.Application.Interfaces.Repositories;
+using WeddingHall.Domain;
+
 
 
 namespace WeddingHall.Infrastructure.Services
 {
     public class UserService : IUserService
     {
-        private readonly ApplicationDbContext _db;
-        private readonly IConfiguration _config; //use to access configuration settings "appsettings"
+        //private readonly ApplicationDbContext _db;
+        private readonly IGenericRepository<Users> _userRepository;
         private readonly PasswordHasher<Users> _passwordHasher;
+        private readonly IConfiguration _config; //use to access configuration settings "appsettings"
 
-        public UserService(ApplicationDbContext db, IConfiguration config)
+        public UserService(IGenericRepository<Users> userRepository, IConfiguration config)
         {
-            _db = db;
+            //_db = db;
+            _userRepository = userRepository;
             _passwordHasher = new PasswordHasher<Users>();
             _config = config;
 
         }
 
+        //User Registeration 
         public async Task<bool> RegisterUserAsync(UserRegistrationRequest request)
         {
-            // for already exsisting email
-            bool exists = await _db.UserManagers //UserManager is table name 
-                .AnyAsync(u => u.Email == request.Email);
+            // for already exsisting email or checking exsisting emails 
+            var existsList = await _userRepository.FindAsync(u => u.Email == request.Email);
 
-            if (exists)
+            if (existsList.Any())
                 return false;
+            
 
             // creating a new user
             var user = new Users
@@ -58,30 +63,26 @@ namespace WeddingHall.Infrastructure.Services
 
 
             };
+
+
             // Hash Passwrod convert 
             user.Password = _passwordHasher.HashPassword(user, request.Password);
-       
 
-            // Saving into database
-            _db.UserManagers.Add(user);
-            await _db.SaveChangesAsync();
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
+
+
 
             return true;
         }
-        
 
 
-
-
-
-
-
-
+        //Sign In
         public async Task<SignInResponse?> SignInAsync(SignInRequest request)
         {
-            var user = await _db.UserManagers
-                .Include(x => x.Role)
-                .FirstOrDefaultAsync(x => x.Email == request.Email);
+            var usersList = await _userRepository.FindAsync(u => u.Email == request.Email);
+            var user = usersList.FirstOrDefault();
+
 
             if (user == null)
                 return null;
@@ -95,7 +96,7 @@ namespace WeddingHall.Infrastructure.Services
 
            
             // Create JWT Token
-                      var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]!);
 
             //claims is use to store data
@@ -107,12 +108,12 @@ namespace WeddingHall.Infrastructure.Services
                 new Claim("UserName", user.UserName)
             };
 
+
             //lock the token so nobody can change it 
             var cred = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature //Algorithm
             );
-
 
             
             var tokenDescriptor = new SecurityTokenDescriptor
