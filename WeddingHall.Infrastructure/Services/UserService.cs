@@ -12,6 +12,7 @@ using WeddingHall.Application.DTOs.UserRegistration;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Application.Interfaces.Repositories;
 using WeddingHall.Domain;
+using AutoMapper;
 
 
 
@@ -23,14 +24,15 @@ namespace WeddingHall.Infrastructure.Services
         private readonly IGenericRepository<Users> _userRepository;
         private readonly PasswordHasher<Users> _passwordHasher;
         private readonly IConfiguration _config; //use to access configuration settings "appsettings"
+        private readonly IMapper _mapper; // Inject AutoMapper
 
-        public UserService(IGenericRepository<Users> userRepository, IConfiguration config)
+        public UserService(IGenericRepository<Users> userRepository, IConfiguration config, IMapper mapper)
         {
             //_db = db;
             _userRepository = userRepository;
             _passwordHasher = new PasswordHasher<Users>();
             _config = config;
-
+            _mapper = mapper;
         }
 
         //User Registeration 
@@ -40,29 +42,24 @@ namespace WeddingHall.Infrastructure.Services
             var existsList = await _userRepository.FindAsync(u => u.Email == request.Email);
 
             if (existsList.Any())
-                return false;
-            
+                return false;         
+     
+            var user = _mapper.Map<Users>(request); // Use AutoMapper
 
-            // creating a new user
-            var user = new Users
-            {
-                GUID = Guid.NewGuid(),
-                UserName = request.FullName,
-                Address = request.Address,
-                CityId = request.CityID,
-                DistrictId = request.DistrictID,
-                PhoneNo = "",
-                Email = request.Email,
-              
-                RoleId = request.RoleID,
-                HallId = null,                // if no halls assigned, thats why we use this 
-                Inserted_By = null,
-                Inserted_Date = DateTime.Now,
-                Updated_By = null,
-                Updated_Date = null,
+            user.GUID = Guid.NewGuid();
+            user.UserName = request.FullName;
+            user.Address = request.Address;
+            user.CityId = request.CityID;
+            user.DistrictId = request.DistrictID;
+            user.PhoneNo = "";
+            user.Email = request.Email;
 
-
-            };
+            user.RoleId = request.RoleID;
+            user.HallId = null;               // if no halls assigned, thats why we use this 
+            //user.Inserted_By = null;
+            user.Inserted_Date = DateTime.Now;
+            //user.Updated_By = null;
+            //user.Updated_Date = null;
 
 
             // Hash Passwrod convert 
@@ -70,8 +67,6 @@ namespace WeddingHall.Infrastructure.Services
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
-
-
 
             return true;
         }

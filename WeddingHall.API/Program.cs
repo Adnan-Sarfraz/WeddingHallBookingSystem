@@ -4,7 +4,8 @@ using WeddingHall.Infrastructure;
 using WeddingHall.Infrastructure.Services;
 using WeddingHall.Application.Interfaces.Repositories;
 using WeddingHall.Infrastructure.Repositories;
-
+using AutoMapper;
+using WeddingHall.Application.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,11 @@ builder.Services.AddScoped<ISubHallService, SubHallService>();
 //Repository layer 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IHallRepository, HallRepository>();
+
+//Auto-Mapper 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 
 
 

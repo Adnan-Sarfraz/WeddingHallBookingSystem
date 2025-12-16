@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,14 @@ namespace WeddingHall.Infrastructure.Services
     {
         private readonly IGenericRepository<SubHallDetail> _subHallRepository;
         private readonly IGenericRepository<HallMaster> _hallRepository;
+        private readonly IMapper _mapper; //Injecting AutoMapper 
 
         public SubHallService(IGenericRepository<SubHallDetail> subHallRepository,
-                              IGenericRepository<HallMaster> hallRepository)
+                              IGenericRepository<HallMaster> hallRepository, IMapper mapper)
         {
             _subHallRepository = subHallRepository;
             _hallRepository = hallRepository;
+            _mapper = mapper;
         }
 
         //CREATE
@@ -31,19 +34,11 @@ namespace WeddingHall.Infrastructure.Services
             if (hall == null)
                 return false;
 
-            var model = new SubHallDetail
-            {
-                GUID = Guid.NewGuid(),
-                Hall_id = request.Hall_id,
-                SubHall_Name = request.SubHall_Name,
-                Capacity = request.Capacity,
-                Inserted_By = request.Inserted_By,
-                Inserted_Date = DateTime.Now,
-                isActive = true
-            };
+            var model = _mapper.Map<SubHallDetail>(request);
 
             await _subHallRepository.AddAsync(model);
             await _subHallRepository.SaveChangesAsync();
+
             return true;
         }
 
@@ -56,13 +51,12 @@ namespace WeddingHall.Infrastructure.Services
             if (model == null)
                 return false;
 
-            model.SubHall_Name = request.SubHall_Name;
-            model.Capacity = request.Capacity;
-            model.Updated_By = request.Updated_By;
+            _mapper.Map(request, model); //this updates exsisting entity
             model.Updated_Date = DateTime.Now;
 
             _subHallRepository.Update(model);
             await _subHallRepository.SaveChangesAsync();
+
             return true;
         }
 
@@ -91,18 +85,7 @@ namespace WeddingHall.Infrastructure.Services
             if (model == null)
                 return null;
 
-            return new SubHallResponse
-            {
-                GUID = model.GUID,
-                Hall_id = model.Hall_id,
-                SubHall_Name = model.SubHall_Name,
-                Capacity = model.Capacity,
-                Inserted_By = model.Inserted_By,
-                Updated_By = model.Updated_By,
-                Inserted_Date = model.Inserted_Date,
-                Updated_Date = model.Updated_Date,
-                isActive = model.isActive
-            };
+            return _mapper.Map<SubHallResponse>(model);
         }
 
 
@@ -110,18 +93,7 @@ namespace WeddingHall.Infrastructure.Services
         public async Task<List<SubHallResponse>> GetAllAsync()
         {
             var all = await _subHallRepository.GetAllAsync();
-            return all.Select(model => new SubHallResponse
-            {
-                GUID = model.GUID,
-                Hall_id = model.Hall_id,
-                SubHall_Name = model.SubHall_Name,
-                Capacity = model.Capacity,
-                Inserted_By = model.Inserted_By,
-                Updated_By = model.Updated_By,
-                Inserted_Date = model.Inserted_Date,
-                Updated_Date = model.Updated_Date,
-                isActive = model.isActive
-            }).ToList();
+            return _mapper.Map<List<SubHallResponse>>(all);
         }
     }
 }
