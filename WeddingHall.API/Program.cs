@@ -24,6 +24,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISubHallService, SubHallService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+//builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+
 
 //Repository layer 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

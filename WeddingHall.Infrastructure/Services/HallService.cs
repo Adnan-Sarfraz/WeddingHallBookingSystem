@@ -10,8 +10,9 @@ namespace WeddingHall.Infrastructure.Services
     public class HallService : IHallService
     {
         //private readonly ApplicationDbContext _db;
-        private readonly IHallRepository _hallRepository;
+        private readonly IHallRepository _hallRepository; //handles database CRUD operations 
         private readonly IMapper _mapper; //injecting automapper 
+
         public HallService(IHallRepository hallRepository, IMapper mapper)
         {
             _hallRepository = hallRepository;

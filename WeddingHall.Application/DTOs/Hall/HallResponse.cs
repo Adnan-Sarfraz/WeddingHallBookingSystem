@@ -12,7 +12,7 @@ namespace WeddingHall.Application.DTOs.Hall
         public string HallName { get; set; } = string.Empty;
         public string HallAddress { get; set; } = string.Empty;
 
-        public string CityName { get; set; } = string.Empty;
+        public string? CityName { get; set; }
         public string DistrictName { get; set; } = string.Empty;
 
         public bool IsActive { get; set; }

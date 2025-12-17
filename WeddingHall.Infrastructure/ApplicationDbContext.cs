@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WeddingHall.Domain;
+using WeddingHall.Domain.ViewModels;
 using WeddingHall.Infrastructure;
 
 namespace WeddingHall.Infrastructure
@@ -30,14 +31,31 @@ namespace WeddingHall.Infrastructure
         public DbSet<City>Cities {get; set;}
         public DbSet<District>Districts { get; set; }
 
+        //------------------------------------------------------------------------------------------
+
+        public DbSet<NewRequestView> NewRequests { get; set; }
+        public DbSet<TodayBookingView> TodayBookings { get; set; }
+        public DbSet<Next15DaysBookingView> Next15DaysBookings { get; set; }
 
 
+        //------------------------------------------------------------------------------------------
 
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //------------------------------------------------------------------------------------------
+
+            // Map Views as Keyless Entities
+            modelBuilder.Entity<NewRequestView>().HasNoKey().ToView("vw_NewRequests");
+            modelBuilder.Entity<TodayBookingView>().HasNoKey().ToView("vw_TodayBookings");
+            modelBuilder.Entity<Next15DaysBookingView>().HasNoKey().ToView("vw_Next15DaysBookings");
+
+            //------------------------------------------------------------------------------------------
+
+
             // ====================== HALL ======================
             modelBuilder.Entity<Hall>(entity =>
             {
