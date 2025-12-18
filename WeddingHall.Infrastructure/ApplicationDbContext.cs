@@ -11,7 +11,7 @@ using WeddingHall.Infrastructure;
 namespace WeddingHall.Infrastructure
 {
     public class ApplicationDbContext : DbContext
-    {
+    {   
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

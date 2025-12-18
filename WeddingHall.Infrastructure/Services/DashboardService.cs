@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WeddingHall.Application.Interfaces;
+using WeddingHall.Application.DTOs.Dashboard;
+
 
 namespace WeddingHall.Infrastructure.Services
 {
@@ -29,7 +31,12 @@ namespace WeddingHall.Infrastructure.Services
 
         public async Task<decimal> GetTodayBookingTotalAmountAsync()
         {
-            return await _db.TodayBookings.SumAsync(b => b.Amount);
+            var data = await _db.TodayBookings
+            .Select(b => b.Amount)
+            .ToListAsync();
+
+            return data.Sum();
+
         }
 
         public async Task<int> GetNext15DaysBookingCountAsync()
@@ -39,7 +46,11 @@ namespace WeddingHall.Infrastructure.Services
 
         public async Task<decimal> GetNext15DaysBookingTotalAmountAsync()
         {
-            return await _db.Next15DaysBookings.SumAsync(b => b.Amount);
+            var data = await _db.TodayBookings
+            .Select(b => b.Amount)
+            .ToListAsync();
+
+            return data.Sum();
         }
 
         public async Task<DashboardResponse> GetDashboardAsync()

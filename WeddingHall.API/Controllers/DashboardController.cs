@@ -15,8 +15,8 @@ namespace WeddingHall.API.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("{hallId}")]
-        public async Task<IActionResult> GetDashboard(Guid hallId)
+        [HttpGet]
+        public async Task<IActionResult> GetDashboard()
         {
             var dashboardData = await _dashboardService.GetDashboardAsync();
             return Ok(new

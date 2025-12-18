@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WeddingHall.Application.DTOs;
 using WeddingHall.Domain.ViewModels;
+using WeddingHall.Application.DTOs.Dashboard;
 
 namespace WeddingHall.Application.Interfaces
 {
@@ -19,12 +20,5 @@ namespace WeddingHall.Application.Interfaces
         // Optional: Return combined DTO for dashboard
         Task<DashboardResponse> GetDashboardAsync();
     }
-    public class DashboardResponse
-    {
-        public int NewRequestCount { get; set; }
-        public int TodayBookingCount { get; set; }
-        public decimal TodayBookingTotalAmount { get; set; }
-        public int Next15DaysBookingCount { get; set; }
-        public decimal Next15DaysBookingTotalAmount { get; set; }
-    }
+   
 }
