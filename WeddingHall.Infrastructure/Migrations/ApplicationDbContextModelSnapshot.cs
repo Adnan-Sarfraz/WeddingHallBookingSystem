@@ -291,6 +291,56 @@ namespace WeddingHall.Infrastructure.Migrations
                     b.ToTable("HallMasters");
                 });
 
+            modelBuilder.Entity("WeddingHall.Domain.HallServices", b =>
+                {
+                    b.Property<Guid>("GUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("HallId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Inserted_By")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Inserted_Date")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal>("ServicePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ServiceQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("Updated_By")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Updated_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.HasKey("GUID");
+
+                    b.HasIndex("HallId");
+
+                    b.ToTable("HallServices", (string)null);
+                });
+
             modelBuilder.Entity("WeddingHall.Domain.Role", b =>
                 {
                     b.Property<Guid>("GUID")
@@ -497,6 +547,75 @@ namespace WeddingHall.Infrastructure.Migrations
                     b.ToTable("UserManagers");
                 });
 
+            modelBuilder.Entity("WeddingHall.Domain.ViewModels.NewRequestView", b =>
+                {
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HallId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_NewRequests", (string)null);
+                });
+
+            modelBuilder.Entity("WeddingHall.Domain.ViewModels.Next15DaysBookingView", b =>
+                {
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HallId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_Next15DaysBookings", (string)null);
+                });
+
+            modelBuilder.Entity("WeddingHall.Domain.ViewModels.TodayBookingView", b =>
+                {
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("HallId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vw_TodayBookings", (string)null);
+                });
+
             modelBuilder.Entity("WeddingHall.Domain.Availability", b =>
                 {
                     b.HasOne("WeddingHall.Domain.Hall", null)
@@ -551,6 +670,17 @@ namespace WeddingHall.Infrastructure.Migrations
                     b.Navigation("City");
 
                     b.Navigation("District");
+                });
+
+            modelBuilder.Entity("WeddingHall.Domain.HallServices", b =>
+                {
+                    b.HasOne("WeddingHall.Domain.HallMaster", "Hall")
+                        .WithMany()
+                        .HasForeignKey("HallId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Hall");
                 });
 
             modelBuilder.Entity("WeddingHall.Domain.SubHallDetail", b =>

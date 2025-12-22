@@ -30,6 +30,9 @@ namespace WeddingHall.Infrastructure
         public DbSet<SubHallUserAssociate> SubHallUserAssociates { get; set; }
         public DbSet<City>Cities {get; set;}
         public DbSet<District>Districts { get; set; }
+        public DbSet<HallServices> HallServices { get; set; }
+
+
 
         //------------------------------------------------------------------------------------------
 
@@ -54,6 +57,51 @@ namespace WeddingHall.Infrastructure
             modelBuilder.Entity<Next15DaysBookingView>().HasNoKey().ToView("vw_Next15DaysBookings");
 
             //------------------------------------------------------------------------------------------
+            // ====================== HallService ======================
+            //modelBuilder.Entity<HallService>()
+            // .HasOne(hs => hs.Hall)
+            // .WithMany()
+            // .HasForeignKey(hs => hs.HallId);
+            modelBuilder.Entity<HallServices>(entity =>
+            {
+                // Table name
+                entity.ToTable("HallServices");
+
+                // Primary Key
+                entity.HasKey(e => e.GUID);
+
+                // Columns
+                entity.Property(e => e.GUID)
+                      .IsRequired();
+
+                entity.Property(e => e.ServiceName)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(e => e.ServicePrice)
+                      .HasColumnType("decimal(18,2)")
+                      .IsRequired();
+
+                entity.Property(e => e.ServiceQuantity)
+                      .IsRequired();
+
+                entity.Property(e => e.Description)
+                      .HasMaxLength(500);
+
+                // Foreign Key Relationship
+                entity.HasOne(e => e.Hall)
+                      .WithMany()   // navigation collection
+                      .HasForeignKey(e => e.HallId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // BaseDomainClass fields
+                entity.Property(e => e.isActive)
+                      .HasDefaultValue(true);
+
+                entity.Property(e => e.Inserted_Date)
+                      .HasDefaultValueSql("GETDATE()");
+            });
+
 
 
             // ====================== HALL ======================

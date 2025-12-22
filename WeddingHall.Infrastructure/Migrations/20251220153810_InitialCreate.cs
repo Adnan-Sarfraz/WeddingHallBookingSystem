@@ -190,6 +190,33 @@ namespace WeddingHall.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HallServices",
+                columns: table => new
+                {
+                    GUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HallId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    ServicePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ServiceQuantity = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Inserted_By = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Updated_By = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Inserted_Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    Updated_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HallServices", x => x.GUID);
+                    table.ForeignKey(
+                        name: "FK_HallServices_HallMasters_HallId",
+                        column: x => x.HallId,
+                        principalTable: "HallMasters",
+                        principalColumn: "GUID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubHallDetails",
                 columns: table => new
                 {
@@ -331,6 +358,11 @@ namespace WeddingHall.Infrastructure.Migrations
                 column: "DistrictId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HallServices_HallId",
+                table: "HallServices",
+                column: "HallId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Roles_RoleCode",
                 table: "Roles",
                 column: "RoleCode",
@@ -390,6 +422,9 @@ namespace WeddingHall.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Favorites");
+
+            migrationBuilder.DropTable(
+                name: "HallServices");
 
             migrationBuilder.DropTable(
                 name: "SubHallUserAssociates");

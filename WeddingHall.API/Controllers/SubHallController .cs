@@ -15,7 +15,7 @@ namespace WeddingHall.API.Controllers
             _service = service;
         }
         //CREATE
-        [HttpPost("CREATE")]
+        [HttpPost]
         public async Task<IActionResult> Create(SubHallCreateRequest request)
         {
             var result = await _service.CreateAsync(request);
@@ -27,7 +27,7 @@ namespace WeddingHall.API.Controllers
 
 
         //UPDATE
-        [HttpPut("UPDATE")]
+        [HttpPut]
         public async Task<IActionResult> Update(SubHallUpdateRequest request)
         {
             var result = await _service.UpdateAsync(request);
@@ -39,7 +39,7 @@ namespace WeddingHall.API.Controllers
 
 
         //DELETE
-        [HttpDelete("Delete/{guid}")]
+        [HttpDelete("{guid}")]
         public async Task<IActionResult> Delete(Guid guid)
         {
             var result = await _service.DeleteAsync(guid);
@@ -51,7 +51,7 @@ namespace WeddingHall.API.Controllers
 
 
         //GET_BY_ID
-        [HttpGet("GETBYID/{guid}")]
+        [HttpGet("{guid}")]
         public async Task<IActionResult> GetAll()
         {
             var list = await _service.GetAllAsync();

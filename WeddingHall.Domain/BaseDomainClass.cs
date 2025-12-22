@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeddingHall.Domain
 {
-    public class BaseDomainClass
+    public abstract class BaseDomainClass
     {
         public Guid? Inserted_By { get; set; }
         public Guid? Updated_By {  get; set; }

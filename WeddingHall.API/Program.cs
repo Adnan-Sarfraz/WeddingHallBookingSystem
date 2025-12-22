@@ -25,6 +25,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISubHallService, SubHallService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IHallServiceService, HallServiceService>();
+
 //builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 

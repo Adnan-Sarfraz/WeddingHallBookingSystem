@@ -17,7 +17,7 @@ namespace WeddingHall.API.Controllers
             _hallService = hallService;
         }
         // /api/Hall/CREATE
-        [HttpPost("CREATE")]
+        [HttpPost]
         //Create user
         public async Task<IActionResult> CreateHall(HallCreateRequest request)
         {
@@ -31,7 +31,7 @@ namespace WeddingHall.API.Controllers
 
         }
         // /api/Hall/GET ALL 
-        [HttpGet("GETALL")]
+        [HttpGet]
         //Get All
         public async Task<IActionResult> GetAll()
         {
@@ -40,7 +40,7 @@ namespace WeddingHall.API.Controllers
         }
 
         // api/Hall/GET/{id}
-        [HttpGet("GET/{id}")]
+        [HttpGet("{id}")]
         //Get by ID
         public async Task<IActionResult> GetHall(Guid id)
         {
@@ -68,7 +68,7 @@ namespace WeddingHall.API.Controllers
 
         }
             //api/Hall/DELETE
-      [HttpDelete("DELETE")]
+      [HttpDelete]
        //DELETE DATA
         public async Task<IActionResult> Delete(Guid id)
         {
