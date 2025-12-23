@@ -22,6 +22,6 @@ namespace WeddingHall.Application.DTOs.SubHall
         public bool isActive { get; set; }
 
 
-
+        public List<Guid> ServiceIds { get; set; } = new(); //ServiceIds
     }
 }

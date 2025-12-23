@@ -291,6 +291,36 @@ namespace WeddingHall.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SubHallServiceAssociates",
+                columns: table => new
+                {
+                    GUID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubHall_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Service_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Inserted_By = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Updated_By = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Inserted_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Updated_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    isActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubHallServiceAssociates", x => x.GUID);
+                    table.ForeignKey(
+                        name: "FK_SubHallServiceAssociates_HallServices_Service_Id",
+                        column: x => x.Service_Id,
+                        principalTable: "HallServices",
+                        principalColumn: "GUID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubHallServiceAssociates_SubHallDetails_SubHall_Id",
+                        column: x => x.SubHall_Id,
+                        principalTable: "SubHallDetails",
+                        principalColumn: "GUID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubHallUserAssociates",
                 columns: table => new
                 {
@@ -374,6 +404,16 @@ namespace WeddingHall.Infrastructure.Migrations
                 column: "Hall_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SubHallServiceAssociates_Service_Id",
+                table: "SubHallServiceAssociates",
+                column: "Service_Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubHallServiceAssociates_SubHall_Id",
+                table: "SubHallServiceAssociates",
+                column: "SubHall_Id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubHallUserAssociates_SubHall_Id",
                 table: "SubHallUserAssociates",
                 column: "SubHall_Id");
@@ -424,13 +464,16 @@ namespace WeddingHall.Infrastructure.Migrations
                 name: "Favorites");
 
             migrationBuilder.DropTable(
-                name: "HallServices");
+                name: "SubHallServiceAssociates");
 
             migrationBuilder.DropTable(
                 name: "SubHallUserAssociates");
 
             migrationBuilder.DropTable(
                 name: "Halls");
+
+            migrationBuilder.DropTable(
+                name: "HallServices");
 
             migrationBuilder.DropTable(
                 name: "SubHallDetails");

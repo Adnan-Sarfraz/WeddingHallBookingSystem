@@ -8,6 +8,25 @@ using AutoMapper;
 using WeddingHall.Application.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
+const string FrontendCors = "FrontendCors";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(FrontendCors, policy =>
+        policy.WithOrigins(
+                "http://localhost:5173", "http://localhost:5174",
+                "http://127.0.0.1:5173", "http://127.0.0.1:5174",
+                "https://localhost:5173", "https://localhost:5174",
+                "http://94.130.221.226:5173", "http://localhost:4000",
+                "http://localhost:4200", "http://94.130.221.226:8082",
+                "http://94.130.221.226:550", "http://94.130.221.226:47001",
+                "http://94.130.221.226:8099", "http://94.130.221.226:8099",
+                "http://localhost:8100"
+            )
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .AllowAnyMethod()
+    );
+});
 
 // Add services to the container.
 

@@ -32,6 +32,9 @@ namespace WeddingHall.Infrastructure
         public DbSet<District>Districts { get; set; }
         public DbSet<HallServices> HallServices { get; set; }
 
+        public DbSet<SubHallServiceAssociate> SubHallServiceAssociates { get; set; }
+
+
 
 
         //------------------------------------------------------------------------------------------
@@ -57,6 +60,9 @@ namespace WeddingHall.Infrastructure
             modelBuilder.Entity<Next15DaysBookingView>().HasNoKey().ToView("vw_Next15DaysBookings");
 
             //------------------------------------------------------------------------------------------
+
+
+
             // ====================== HallService ======================
             //modelBuilder.Entity<HallService>()
             // .HasOne(hs => hs.Hall)
@@ -100,6 +106,23 @@ namespace WeddingHall.Infrastructure
 
                 entity.Property(e => e.Inserted_Date)
                       .HasDefaultValueSql("GETDATE()");
+            });
+
+
+            // ====================== SubHallServiceAssociate  ======================
+            modelBuilder.Entity<SubHallServiceAssociate>(entity =>
+            {
+                entity.HasKey(x => x.GUID);
+
+                entity.HasOne(x => x.SubHall)
+                      .WithMany()
+                      .HasForeignKey(x => x.SubHall_Id)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.Service)
+                      .WithMany()
+                      .HasForeignKey(x => x.Service_Id)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
 

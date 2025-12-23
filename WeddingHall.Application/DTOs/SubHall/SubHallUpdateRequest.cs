@@ -11,8 +11,8 @@ namespace WeddingHall.Application.DTOs.SubHall
         public Guid GUID { get; set; }  // SubHall ID
         public string SubHall_Name { get; set; } = string.Empty;
         public int Capacity { get; set; }
+        public Guid? Updated_By { get; set; }  // To track who updated the record
 
-        // To track who updated the record
-        public Guid? Updated_By { get; set; }
+        public List<Guid> ServiceIds { get; set; } = new(); //list of service id's
     }
 }

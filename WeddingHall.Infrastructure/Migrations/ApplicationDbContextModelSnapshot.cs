@@ -429,6 +429,42 @@ namespace WeddingHall.Infrastructure.Migrations
                     b.ToTable("SubHallDetails");
                 });
 
+            modelBuilder.Entity("WeddingHall.Domain.SubHallServiceAssociate", b =>
+                {
+                    b.Property<Guid>("GUID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Inserted_By")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Inserted_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Service_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SubHall_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("Updated_By")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Updated_Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("GUID");
+
+                    b.HasIndex("Service_Id");
+
+                    b.HasIndex("SubHall_Id");
+
+                    b.ToTable("SubHallServiceAssociates");
+                });
+
             modelBuilder.Entity("WeddingHall.Domain.SubHallUserAssociate", b =>
                 {
                     b.Property<Guid>("GUID")
@@ -692,6 +728,25 @@ namespace WeddingHall.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("HallMaster");
+                });
+
+            modelBuilder.Entity("WeddingHall.Domain.SubHallServiceAssociate", b =>
+                {
+                    b.HasOne("WeddingHall.Domain.HallServices", "Service")
+                        .WithMany()
+                        .HasForeignKey("Service_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WeddingHall.Domain.SubHallDetail", "SubHall")
+                        .WithMany()
+                        .HasForeignKey("SubHall_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+
+                    b.Navigation("SubHall");
                 });
 
             modelBuilder.Entity("WeddingHall.Domain.SubHallUserAssociate", b =>
