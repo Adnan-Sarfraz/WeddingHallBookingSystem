@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WeddingHall.Application.DTOs.SubHall;
 using WeddingHall.Application.Interfaces;
 
 namespace WeddingHall.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubHallController:ControllerBase
@@ -27,6 +29,7 @@ namespace WeddingHall.API.Controllers
 
 
         //UPDATE
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Update(SubHallUpdateRequest request)
         {

@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using WeddingHall.Application.DTOs.Hall;
@@ -7,6 +8,7 @@ using WeddingHall.Application.Interfaces;
 
 namespace WeddingHall.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HallController : ControllerBase

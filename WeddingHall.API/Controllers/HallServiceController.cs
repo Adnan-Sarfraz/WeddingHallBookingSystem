@@ -6,6 +6,7 @@ using WeddingHall.Infrastructure.Services;
 
 namespace WeddingHall.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     
