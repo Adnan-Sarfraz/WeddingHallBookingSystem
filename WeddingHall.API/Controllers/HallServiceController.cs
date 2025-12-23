@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WeddingHall.Application.DTOs.HallService;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Infrastructure.Services;
@@ -7,6 +8,7 @@ namespace WeddingHall.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    
     public class HallServiceController : ControllerBase
     {
         private readonly IHallServiceService _hallServiceService;

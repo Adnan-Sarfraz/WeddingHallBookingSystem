@@ -739,7 +739,7 @@ namespace WeddingHall.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("WeddingHall.Domain.SubHallDetail", "SubHall")
-                        .WithMany()
+                        .WithMany("SubHallServiceAssociates")
                         .HasForeignKey("SubHall_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -800,6 +800,11 @@ namespace WeddingHall.Infrastructure.Migrations
                     b.Navigation("HallMaster");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("WeddingHall.Domain.SubHallDetail", b =>
+                {
+                    b.Navigation("SubHallServiceAssociates");
                 });
 #pragma warning restore 612, 618
         }

@@ -64,10 +64,7 @@ namespace WeddingHall.Infrastructure
 
 
             // ====================== HallService ======================
-            //modelBuilder.Entity<HallService>()
-            // .HasOne(hs => hs.Hall)
-            // .WithMany()
-            // .HasForeignKey(hs => hs.HallId);
+          
             modelBuilder.Entity<HallServices>(entity =>
             {
                 // Table name
@@ -110,20 +107,50 @@ namespace WeddingHall.Infrastructure
 
 
             // ====================== SubHallServiceAssociate  ======================
-            modelBuilder.Entity<SubHallServiceAssociate>(entity =>
-            {
-                entity.HasKey(x => x.GUID);
+            modelBuilder.Entity<SubHallServiceAssociate>()
+                 .HasKey(x => x.GUID);
 
-                entity.HasOne(x => x.SubHall)
-                      .WithMany()
-                      .HasForeignKey(x => x.SubHall_Id)
-                      .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<SubHallServiceAssociate>()
+                .HasOne(x => x.SubHall)
+                .WithMany(x => x.SubHallServiceAssociates)
+                .HasForeignKey(x => x.SubHall_Id);
 
-                entity.HasOne(x => x.Service)
-                      .WithMany()
-                      .HasForeignKey(x => x.Service_Id)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
+            modelBuilder.Entity<SubHallServiceAssociate>()
+                .HasOne(x => x.Service)
+                .WithMany()
+                .HasForeignKey(x => x.Service_Id);
+
+
+
+
+
+            //modelBuilder.Entity<SubHallServiceAssociate>()
+            //        .HasOne(x => x.SubHall)
+            //        .WithMany(x => x.SubHallServiceAssociates)
+            //        .HasForeignKey(x => x.SubHall_Id);
+
+            //modelBuilder.Entity<SubHallServiceAssociate>()
+            //         .HasOne(x => x.Service)
+            //         .WithMany()
+            //         .HasForeignKey(x => x.Service_Id);
+
+
+
+
+            //modelBuilder.Entity<SubHallServiceAssociate>(entity =>
+            //{
+            //    entity.HasKey(x => x.GUID);
+
+            //    entity.HasOne(x => x.SubHall)
+            //          .WithMany()
+            //          .HasForeignKey(x => x.SubHall_Id)
+            //          .OnDelete(DeleteBehavior.Cascade);
+
+            //    entity.HasOne(x => x.Service)
+            //          .WithMany()
+            //          .HasForeignKey(x => x.Service_Id)
+            //          .OnDelete(DeleteBehavior.Cascade);
+            //});
 
 
 

@@ -17,5 +17,7 @@ namespace WeddingHall.Application.Interfaces.Repositories
         void Delete(T entity);
         Task SaveChangesAsync();
 
+        IQueryable<T> Query();
+
     }
 }

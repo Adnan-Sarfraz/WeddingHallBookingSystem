@@ -81,7 +81,7 @@ namespace WeddingHall.Infrastructure.Services
             if (model == null)
                 return false;
 
-            //Update SubHall basic info
+            //Update time automatically
             _mapper.Map(request, model);
             model.Updated_Date = DateTime.Now;
 
@@ -138,36 +138,59 @@ namespace WeddingHall.Infrastructure.Services
         }
 
 
-        //GET_BY_ID
 
+        //GET_BY_ID
         public async Task<SubHallResponse?> GetByIdAsync(Guid guid)
         {
-            var model = await _subHallRepository.GetByIdAsync(guid);
-
+            var model = await _subHallRepository
+                .Query()
+                .Include(s => s.SubHallServiceAssociates)
+                .ThenInclude(sa => sa.Service)
+                .FirstOrDefaultAsync(s => s.GUID == guid && s.isActive);
             if (model == null)
                 return null;
 
-            // Map SubHall basic info
-            var response = _mapper.Map<SubHallResponse>(model);
-
-            // Get associated services
-            var services = await _subHallServiceRepo
-                .FindAsync(x => x.SubHall_Id == model.GUID && x.isActive);
-
-            // Attach service GUID list
-            response.ServiceIds = services
-                .Select(x => x.Service_Id)
+            var response = _mapper.Map<SubHallResponse>(model); response
+                .Services = model.SubHallServiceAssociates
+                .Select(sa => new SubHallServiceResponse
+                {
+                    Service_Id = sa.Service_Id,
+                    Service_Name = sa.Service.ServiceName
+                })
                 .ToList();
 
             return response;
         }
 
 
-        //GET_ALL
+        //GetAllAsync
         public async Task<List<SubHallResponse>> GetAllAsync()
         {
-            var all = await _subHallRepository.GetAllAsync();
-            return _mapper.Map<List<SubHallResponse>>(all);
+            var models = await _subHallRepository
+                .Query()
+                .Include(s => s.SubHallServiceAssociates)
+                    .ThenInclude(sa => sa.Service)
+                .Where(s => s.isActive)
+                .ToListAsync();
+
+            var responseList = models.Select(model =>
+            {
+                var response = _mapper.Map<SubHallResponse>(model);
+
+                response.Services = model.SubHallServiceAssociates
+                    .Where(sa => sa.isActive)
+                    .Select(sa => new SubHallServiceResponse
+                    {
+                        Service_Id = sa.Service_Id,
+                        Service_Name = sa.Service.ServiceName
+                    })
+                    .ToList();
+
+                return response;
+            }).ToList();
+
+            return responseList;
         }
+
     }
 }

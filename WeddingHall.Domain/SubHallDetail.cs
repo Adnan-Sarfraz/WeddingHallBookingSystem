@@ -19,6 +19,9 @@ namespace WeddingHall.Domain
         //They are used to move (navigate) from one table to another related table in C# code.
         public HallMaster? HallMaster { get; set; }
 
-   
+
+        public ICollection<SubHallServiceAssociate> SubHallServiceAssociates { get; set; }
+          = new List<SubHallServiceAssociate>();
+
     }
 }

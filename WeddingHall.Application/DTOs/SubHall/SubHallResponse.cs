@@ -21,7 +21,7 @@ namespace WeddingHall.Application.DTOs.SubHall
         public DateTime? Updated_Date { get; set; }
         public bool isActive { get; set; }
 
+        public List<SubHallServiceResponse> Services { get; set; } //show the service ID with NAMES
 
-        public List<Guid> ServiceIds { get; set; } = new(); //ServiceIds
     }
 }
