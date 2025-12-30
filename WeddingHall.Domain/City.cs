@@ -18,20 +18,5 @@ namespace WeddingHall.Domain
         //Nvaigation property
         public District? District { get; set; }
     }
-    //public class City: BaseDomainClass
-    //{
-    //    public Guid Guid { get; set; } //GUID of city
-    //    public string CityName { get; set; } = string.Empty;
-    //    public Guid CityCode  { get; set; }
-
-    //    public Guid? Districtode { get; set; } //disctrict code as a forign key 
-
-
-    //    //Navigation property 
-    //    public District? District { get; set; }
-
-
-
-
-    //}
+    
 }

@@ -13,11 +13,4 @@ namespace WeddingHall.Domain
 
         public Guid DisctrictCode { get; set; } // Normal column, NOT PK
     }
-    //public class District : BaseDomainClass
-    //{
-    //    public Guid Guid { get; set; } //GUID of District
-    //    public string DistrictName { get; set; } = string.Empty;
-    //    public Guid DisctrictCode { get; set; } //district code
-
-    //}
 }

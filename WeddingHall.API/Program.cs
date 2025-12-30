@@ -86,9 +86,7 @@ builder.Services.AddScoped<IHallServiceService, HallServiceService>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-
-//builder.Services.AddScoped<IDashboardService, DashboardService>();
-
+builder.Services.AddScoped<IDropdownService, DropdownService>();
 
 
 //Repository layer 
