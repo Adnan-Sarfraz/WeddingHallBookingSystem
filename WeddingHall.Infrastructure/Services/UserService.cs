@@ -28,7 +28,7 @@ namespace WeddingHall.Infrastructure.Services
 
         public UserService(IGenericRepository<Users> userRepository, IConfiguration config, IMapper mapper)
         {
-            //_db = db;
+           
             _userRepository = userRepository;
             _passwordHasher = new PasswordHasher<Users>();
             _config = config;
@@ -55,13 +55,9 @@ namespace WeddingHall.Infrastructure.Services
             user.Email = request.Email;
 
             user.RoleId = request.RoleID;
-            user.HallId = null;               // if no halls assigned, thats why we use this 
-            //user.Inserted_By = null;
-            user.Inserted_Date = DateTime.Now;
-            //user.Updated_By = null;
-            //user.Updated_Date = null;
+            user.HallId = null;               
 
-
+           
             // Hash Passwrod convert 
             user.Password = _passwordHasher.HashPassword(user, request.Password);
 
@@ -75,31 +71,36 @@ namespace WeddingHall.Infrastructure.Services
         //Sign In
         public async Task<SignInResponse?> SignInAsync(SignInRequest request)
         {
-            var usersList = await _userRepository.FindAsync(u => u.Email == request.Email);
-            var user = usersList.FirstOrDefault();
-
+            //var usersList = await _userRepository.FindAsync(u => u.Email == request.Email);
+            //var user = usersList.FirstOrDefault();
+            var user = await _userRepository
+             .Query()
+             .Include(u => u.Role)
+             .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
                 return null;
 
-            // Verification of  hashed password
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);// user.Password => old stored password,, request.Password=> Entered Password 
-            
-            // if Password is incorrect
-            if (result != PasswordVerificationResult.Success)
-                return null; 
+            if (user.Role == null)
+                throw new Exception("User has no role assigned. Data integrity issue.");
 
+            // Verification of  hashed password
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
+           
+            if (result != PasswordVerificationResult.Success)
+                return null;
            
             // Create JWT Token
-            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]!);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-            //claims is use to store data
+            // store data
             var claims = new[]
-            {
-                new Claim("UserId", user.GUID.ToString()), //we use GUID inside the table ,, UserId=> label & user.GUID.ToString() => value 
+            {               
+                new Claim(ClaimTypes.NameIdentifier, user.GUID.ToString()),
                 new Claim(ClaimTypes.Email, user.Email), //Compare both incomming and stored requests 
-                new Claim(ClaimTypes.Role, user.Role?.RoleCode?? "USER"), // if user has a role, show it... if no user assigned role is admin 
+                //new Claim(ClaimTypes.Role, user.Role?.RoleCode?? "USER"),
+                new Claim(ClaimTypes.Role, user.Role.RoleName),
                 new Claim("UserName", user.UserName)
             };
 
@@ -110,11 +111,13 @@ namespace WeddingHall.Infrastructure.Services
                 SecurityAlgorithms.HmacSha256Signature //Algorithm
             );
 
-            
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(6),// this tells how much the token stays (Time)
+                Expires = DateTime.UtcNow.AddHours(6),
+                Issuer = _config["Jwt:Issuer"],
+                Audience = _config["Jwt:Audience"],
                 SigningCredentials = cred
             };
 
@@ -125,7 +128,7 @@ namespace WeddingHall.Infrastructure.Services
                 Token = tokenHandler.WriteToken(token),
                 UserId = user.GUID,
                 UserName = user.UserName,
-                Role = user.Role?.RoleName?? "USER"
+                Role = user.Role.RoleName
             };
         }
     }

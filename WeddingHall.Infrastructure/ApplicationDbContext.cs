@@ -7,18 +7,48 @@ using Microsoft.EntityFrameworkCore;
 using WeddingHall.Domain;
 using WeddingHall.Domain.ViewModels;
 using WeddingHall.Infrastructure;
+using WeddingHall.Application.Interfaces;
 
 namespace WeddingHall.Infrastructure
 {
     public class ApplicationDbContext : DbContext
-    {   
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    {
+        private readonly ICurrentUserService _currentUser;
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUser)
             : base(options)
         {
+            _currentUser = currentUser;
         }
 
-        // Define your tables here
-        //public DbSet<User> Users { get; set; }
+        //Getting Inserted_By and Updated_By from Backend 
+        public override async Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseDomainClass>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.Inserted_Date = DateTime.Now;
+                    entry.Entity.Inserted_By = _currentUser?.UserId;
+                    entry.Entity.isActive = true;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    //PROTECTION
+                    entry.Property(x => x.Inserted_By).IsModified = false;
+                    entry.Property(x => x.Inserted_Date).IsModified = false;
+
+                    entry.Entity.Updated_Date = DateTime.Now;
+                    entry.Entity.Updated_By = _currentUser?.UserId;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+
+        // Tbales Defined Here
         public DbSet<Hall> Halls { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
@@ -64,7 +94,6 @@ namespace WeddingHall.Infrastructure
 
 
             // ====================== HallService ======================
-          
             modelBuilder.Entity<HallServices>(entity =>
             {
                 // Table name
@@ -101,8 +130,8 @@ namespace WeddingHall.Infrastructure
                 entity.Property(e => e.isActive)
                       .HasDefaultValue(true);
 
-                entity.Property(e => e.Inserted_Date)
-                      .HasDefaultValueSql("GETDATE()");
+                //entity.Property(e => e.Inserted_Date)
+                    //  .HasDefaultValueSql("GETDATE()");
             });
 
 
@@ -119,40 +148,6 @@ namespace WeddingHall.Infrastructure
                 .HasOne(x => x.Service)
                 .WithMany()
                 .HasForeignKey(x => x.Service_Id);
-
-
-
-
-
-            //modelBuilder.Entity<SubHallServiceAssociate>()
-            //        .HasOne(x => x.SubHall)
-            //        .WithMany(x => x.SubHallServiceAssociates)
-            //        .HasForeignKey(x => x.SubHall_Id);
-
-            //modelBuilder.Entity<SubHallServiceAssociate>()
-            //         .HasOne(x => x.Service)
-            //         .WithMany()
-            //         .HasForeignKey(x => x.Service_Id);
-
-
-
-
-            //modelBuilder.Entity<SubHallServiceAssociate>(entity =>
-            //{
-            //    entity.HasKey(x => x.GUID);
-
-            //    entity.HasOne(x => x.SubHall)
-            //          .WithMany()
-            //          .HasForeignKey(x => x.SubHall_Id)
-            //          .OnDelete(DeleteBehavior.Cascade);
-
-            //    entity.HasOne(x => x.Service)
-            //          .WithMany()
-            //          .HasForeignKey(x => x.Service_Id)
-            //          .OnDelete(DeleteBehavior.Cascade);
-            //});
-
-
 
             // ====================== HALL ======================
             modelBuilder.Entity<Hall>(entity =>
@@ -198,9 +193,6 @@ namespace WeddingHall.Infrastructure
             {
 
                 entity.HasKey(f => f.HallId);
-
-               
-
                 entity.HasOne<Hall>()
                       .WithMany()
                       .HasForeignKey(f => f.HallId)
@@ -248,11 +240,11 @@ namespace WeddingHall.Infrastructure
                 entity.Property(s => s.SubHall_Name).HasMaxLength(150);
                 entity.Property(s => s.Capacity).HasDefaultValue(0);
 
-                entity.Property(s => s.Inserted_By).HasMaxLength(100);
-                entity.Property(s => s.Updated_By).HasMaxLength(100);
+                //entity.Property(s => s.Inserted_By).HasMaxLength(100);
+                //entity.Property(s => s.Updated_By).HasMaxLength(100);
 
-                entity.Property(s => s.Inserted_Date)
-                      .HasDefaultValueSql("GETDATE()");
+                //entity.Property(s => s.Inserted_Date)
+                    //  .HasDefaultValueSql("GETDATE()");
 
                 //  Foreign Key Relationship with HallMaster
                 entity.HasOne(s => s.HallMaster)
@@ -269,11 +261,11 @@ namespace WeddingHall.Infrastructure
                 entity.Property(r => r.RoleName).HasMaxLength(100);
                 entity.Property(r => r.RoleCode).HasMaxLength(50);
 
-                entity.Property(r => r.Inserted_By).HasMaxLength(100);
-                entity.Property(r => r.Updated_By).HasMaxLength(100);
+                //entity.Property(r => r.Inserted_By).HasMaxLength(100);
+                //entity.Property(r => r.Updated_By).HasMaxLength(100);
 
-                entity.Property(r => r.Inserted_Date)
-                      .HasDefaultValueSql("GETDATE()");
+                //entity.Property(r => r.Inserted_Date)
+                   //   .HasDefaultValueSql("GETDATE()");
 
                 entity.HasIndex(r => r.RoleCode).IsUnique(); // No duplicate role codes
             });
@@ -288,11 +280,11 @@ namespace WeddingHall.Infrastructure
                 entity.Property(u => u.Email).HasMaxLength(150);
                 entity.Property(u => u.Password).HasMaxLength(200);
 
-                entity.Property(u => u.Inserted_By).HasMaxLength(100);
-                entity.Property(u => u.Updated_By).HasMaxLength(100);
+                //entity.Property(u => u.Inserted_By).HasMaxLength(100);
+                //entity.Property(u => u.Updated_By).HasMaxLength(100);
 
-                entity.Property(u => u.Inserted_Date)
-                      .HasDefaultValueSql("GETDATE()");
+               // entity.Property(u => u.Inserted_Date)
+                    //  .HasDefaultValueSql("GETDATE()");
 
                 entity.HasIndex(u => u.Email).IsUnique(); // No duplicate emails
 
@@ -314,11 +306,11 @@ namespace WeddingHall.Infrastructure
             {
                 entity.HasKey(s => s.GUID);
 
-                entity.Property(s => s.Inserted_By).HasMaxLength(100); 
-                entity.Property(s => s.Updated_By).HasMaxLength(100);
+                //entity.Property(s => s.Inserted_By).HasMaxLength(100); 
+                //entity.Property(s => s.Updated_By).HasMaxLength(100);
 
-                entity.Property(s => s.Inserted_Date)
-                    .HasDefaultValueSql("GETDATE()");
+                //entity.Property(s => s.Inserted_Date)
+                   // .HasDefaultValueSql("GETDATE()");
 
                 // FK → UserManager
                 entity.HasOne(s => s.UserManager)
@@ -351,21 +343,8 @@ namespace WeddingHall.Infrastructure
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-                //modelBuilder.Entity<City>(entity =>
-                //{
-                //    entity.HasKey(c => c.Guid);
-                //    entity.Property(c => c.CityName).HasMaxLength(100);
-                //    entity.HasKey(c => c.CityCode);
-
-
-                //    // FK → DistrictCode
-                //   entity.HasOne(c => c.District)
-                //          .WithMany()
-                //          .HasForeignKey(u => u.Districtode)
-                //          .OnDelete(DeleteBehavior.Restrict);
-
-                //});
-                // ====================== DISTRICT ======================
+               
+            // ====================== DISTRICT ======================
             modelBuilder.Entity<District>(entity =>
             {
                 entity.HasKey(d => d.Guid); // Only ONE PK
@@ -374,13 +353,7 @@ namespace WeddingHall.Infrastructure
                 entity.HasIndex(d => d.DisctrictCode).IsUnique(); // Unique but NOT PK
             });
 
-            //modelBuilder.Entity<District>(entity =>
-            //{
-            //    entity.HasKey( D=> D.Guid);
-            //    entity.Property(D => D.DistrictName).HasMaxLength(100);
-            //    entity.HasKey(D => D.DisctrictCode);
-
-            //});
+            
         }
     }
 }

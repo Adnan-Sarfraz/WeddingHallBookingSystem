@@ -14,6 +14,6 @@ namespace WeddingHall.Application.DTOs.HallService
         public decimal ServicePrice { get; set; }
         public int ServiceQuantity { get; set; }
         public string? Description { get; set; }
-        public Guid? Inserted_By { get; set; }
+        //public Guid? Inserted_By { get; set; }
     }
 }

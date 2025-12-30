@@ -40,8 +40,8 @@ namespace WeddingHall.Infrastructure.Services
             // Create SubHall
             var model = _mapper.Map<SubHallDetail>(request);
             model.GUID = Guid.NewGuid();
-            model.Inserted_Date = DateTime.Now;
-            model.isActive = true;
+            //model.Inserted_Date = DateTime.Now;
+            //model.isActive = true;
 
             await _subHallRepository.AddAsync(model);
             await _subHallRepository.SaveChangesAsync();
@@ -56,8 +56,8 @@ namespace WeddingHall.Infrastructure.Services
                         GUID = Guid.NewGuid(),
                         SubHall_Id = model.GUID,
                         Service_Id = serviceId,
-                        Inserted_Date = DateTime.Now,
-                        isActive = true
+                       // Inserted_Date = DateTime.Now,
+                        //isActive = true
                     };
 
                     await _subHallServiceRepo.AddAsync(associate);
@@ -83,7 +83,7 @@ namespace WeddingHall.Infrastructure.Services
 
             //Update time automatically
             _mapper.Map(request, model);
-            model.Updated_Date = DateTime.Now;
+           // model.Updated_Date = DateTime.Now;
 
             _subHallRepository.Update(model);
             await _subHallRepository.SaveChangesAsync();
@@ -109,8 +109,8 @@ namespace WeddingHall.Infrastructure.Services
                         GUID = Guid.NewGuid(),
                         SubHall_Id = model.GUID,
                         Service_Id = serviceId,
-                        Inserted_Date = DateTime.Now,
-                        isActive = true
+                       // Inserted_Date = DateTime.Now,
+                        //isActive = true
                     };
 
                     await _subHallServiceRepo.AddAsync(associate);
@@ -130,7 +130,7 @@ namespace WeddingHall.Infrastructure.Services
                 return false;
 
             model.isActive = false; // Soft delete
-            model.Updated_Date = DateTime.Now;
+            //model.Updated_Date = DateTime.Now;
 
             _subHallRepository.Update(model);
             await _subHallRepository.SaveChangesAsync();

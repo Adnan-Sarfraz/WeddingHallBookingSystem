@@ -308,9 +308,7 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Inserted_Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
@@ -348,13 +346,10 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Inserted_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Inserted_Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("RoleCode")
                         .IsRequired()
@@ -367,7 +362,6 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid?>("Updated_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("Updated_Date")
@@ -399,13 +393,10 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Inserted_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Inserted_Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SubHall_Name")
                         .IsRequired()
@@ -413,7 +404,6 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<Guid?>("Updated_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("Updated_Date")
@@ -472,19 +462,15 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Inserted_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Inserted_Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("SubHall_Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Updated_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("Updated_Date")
@@ -531,13 +517,10 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Inserted_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Inserted_Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -553,7 +536,6 @@ namespace WeddingHall.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("Updated_By")
-                        .HasMaxLength(100)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("Updated_Date")

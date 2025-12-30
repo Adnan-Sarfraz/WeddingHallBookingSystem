@@ -23,10 +23,10 @@ namespace WeddingHall.Infrastructure.Services
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.Role, role)
-        };
+                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                 new Claim(ClaimTypes.Email, email),
+                 new Claim(ClaimTypes.Role, role)
+            };
 
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_config["Jwt:Key"]!)

@@ -27,8 +27,8 @@ namespace WeddingHall.Infrastructure.Services
 
             var entity = _mapper.Map<HallServices>(request);
             entity.GUID = Guid.NewGuid();
-            entity.Inserted_Date = DateTime.Now;
-            entity.isActive = true;
+           // entity.Inserted_Date = DateTime.Now;
+            //entity.isActive = true;
 
             await _serviceRepo.AddAsync(entity);
             await _serviceRepo.SaveChangesAsync();
@@ -41,7 +41,7 @@ namespace WeddingHall.Infrastructure.Services
             if (entity == null) return false;
 
             _mapper.Map(request, entity);
-            entity.Updated_Date = DateTime.Now;
+            //entity.Updated_Date = DateTime.Now;
 
             _serviceRepo.Update(entity);
             await _serviceRepo.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace WeddingHall.Infrastructure.Services
             if (entity == null) return false;
 
             entity.isActive = false;
-            entity.Updated_Date = DateTime.Now;
+           // entity.Updated_Date = DateTime.Now;
 
             _serviceRepo.Update(entity);
             await _serviceRepo.SaveChangesAsync();

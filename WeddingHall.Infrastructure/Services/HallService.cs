@@ -65,8 +65,8 @@ namespace WeddingHall.Infrastructure.Services
 
             _mapper.Map(request, hall);
 
-            hall.Updated_By = request.Updated_By;
-            hall.Updated_Date = DateTime.Now;
+           // hall.Updated_By = request.Updated_By;
+           // hall.Updated_Date = DateTime.Now;
 
             _hallRepository.Update(hall);
             await _hallRepository.SaveChangesAsync();
@@ -84,9 +84,9 @@ namespace WeddingHall.Infrastructure.Services
             if (hall == null)
                 return false;
 
-            hall.isActive = false; //this directly/softly deletes 
-            hall.Updated_Date = DateTime.Now;
+            //hall.Updated_Date = DateTime.Now;
 
+            hall.isActive = false; //this directly/softly deletes 
             _hallRepository.Update(hall);
             await _hallRepository.SaveChangesAsync();
             return true;
