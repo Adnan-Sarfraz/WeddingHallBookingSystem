@@ -5,7 +5,7 @@ using WeddingHall.Application.Interfaces;
 namespace WeddingHall.API.Controllers
 {
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class DropdownController: ControllerBase
     {
@@ -17,6 +17,9 @@ namespace WeddingHall.API.Controllers
 
         [HttpGet("cities")]
         public async Task<IActionResult> Cities() => Ok(await _service.GetCitiesAsync());
+
+        [HttpGet("districts")]
+        public async Task<IActionResult> Districts() => Ok(await _service.GetDistrictsAsync());
 
 
         [HttpGet("roles")]
