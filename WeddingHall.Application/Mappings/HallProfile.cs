@@ -13,11 +13,6 @@ namespace WeddingHall.Application.Mappings
     {
         public HallProfile()
         {
-
-            //Create Hall
-            //this ensure that when you create a hall, these fields are automatically filled
-
-
             CreateMap<HallCreateRequest, HallMaster>()
                 .ForMember(d => d.GUID, o => o.MapFrom(_ => Guid.NewGuid()))
                 .ForMember(d => d.Inserted_Date, o => o.MapFrom(_ => DateTime.Now))
@@ -33,11 +28,6 @@ namespace WeddingHall.Application.Mappings
                     o => o.MapFrom(s => s.City != null ? s.City.CityName : string.Empty))
                 .ForMember(d => d.DistrictName,
                     o => o.MapFrom(s => s.District != null ? s.District.DistrictName : string.Empty));
-           
-
-
-
-
 
         }
     }

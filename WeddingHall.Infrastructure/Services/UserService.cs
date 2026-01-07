@@ -20,7 +20,7 @@ namespace WeddingHall.Infrastructure.Services
 {
     public class UserService : IUserService
     {
-        //private readonly ApplicationDbContext _db;
+       
         private readonly IGenericRepository<Users> _userRepository;
         private readonly PasswordHasher<Users> _passwordHasher;
         private readonly IConfiguration _config; //use to access configuration settings "appsettings"
@@ -71,8 +71,7 @@ namespace WeddingHall.Infrastructure.Services
         //Sign In
         public async Task<SignInResponse?> SignInAsync(SignInRequest request)
         {
-            //var usersList = await _userRepository.FindAsync(u => u.Email == request.Email);
-            //var user = usersList.FirstOrDefault();
+            
             var user = await _userRepository
              .Query()
              .Include(u => u.Role)
@@ -99,7 +98,6 @@ namespace WeddingHall.Infrastructure.Services
             {               
                 new Claim(ClaimTypes.NameIdentifier, user.GUID.ToString()),
                 new Claim(ClaimTypes.Email, user.Email), //Compare both incomming and stored requests 
-                //new Claim(ClaimTypes.Role, user.Role?.RoleCode?? "USER"),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
                 new Claim("UserName", user.UserName)
             };

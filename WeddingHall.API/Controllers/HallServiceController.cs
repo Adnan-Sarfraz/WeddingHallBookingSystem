@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WeddingHall.Application.Common;
 using WeddingHall.Application.DTOs.HallService;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Infrastructure.Services;
@@ -17,33 +18,33 @@ namespace WeddingHall.API.Controllers
         {
             _hallServiceService = hallServiceService;
         }
-        //CREATE
+       
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] HallServiceCreateRequest request)
         {
             var result = await _hallServiceService.CreateAsync(request);
             if (!result)
             {
-                return BadRequest("SERVICE COULD NOT CREATED!");
+                return BadRequest(ApiResponse<bool>.FailureResponse("Hall Service could not be created"));
 
             }
-            return Ok("HALL SERVICE CREATED SUCCESSFULLY!");
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "Hall created successfully"));
         }
 
-        //UPDATE
+        
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] HallServiceUpdateRequest request)
         {
             var result = await _hallServiceService.UpdateAsync(request);
             if (!result)
             {
-                return NotFound("HALL SERVICE NOT FOUND!");
+                return NotFound(ApiResponse<bool>.FailureResponse("Hall service not found"));
                 
             }
-            return Ok("HALL SERVICE UPDATED SUCCESSFULLY!");
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "Hall service updated successfully"));
         }
 
-        //DELETE
+        
         [HttpDelete("{guid}")]
         public async Task<IActionResult>Delete(Guid guid)
         {
@@ -51,14 +52,12 @@ namespace WeddingHall.API.Controllers
 
             if (!result)
             {
-                return NotFound("HALL SERVICE COULD NOT FOUND!");
+                return NotFound(ApiResponse<bool>.FailureResponse("Hall service not found"));
 
             }
-            return Ok("SERVICE DELETED SUCCESSFULLY!");
+            return Ok(ApiResponse<bool>.SuccessResponse(true,"Hall service deleted successfully"));
         }
 
-
-        //GET BY ID 
         [HttpGet("{guid}")]
         public async Task<IActionResult> GetById( Guid guid)
         {
@@ -66,18 +65,17 @@ namespace WeddingHall.API.Controllers
 
             if(service==null)
             {
-                return NotFound("HALL SERVICE NOT FOUND!");
+                return NotFound(ApiResponse<bool>.FailureResponse("Hall service not found"));
             }
-            return Ok(service);
+            return Ok(ApiResponse<object>.SuccessResponse(service, "Hall service fetched successfully"));
         }
 
-
-        //  GET BY HALL ID 
         [HttpGet("by-hall/{hallId}")]
         public async Task<IActionResult> GetByHall(Guid hallId)
         {
             var services = await _hallServiceService.GetByHallIdAsync(hallId);
-            return Ok(services);
+
+            return Ok(ApiResponse<object>.SuccessResponse(services, "Hall services fetched successfully"));
         }
     }
 }

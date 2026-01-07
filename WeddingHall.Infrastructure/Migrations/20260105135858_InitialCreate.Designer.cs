@@ -12,7 +12,7 @@ using WeddingHall.Infrastructure;
 namespace WeddingHall.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251230105414_InitialCreate")]
+    [Migration("20260105135858_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

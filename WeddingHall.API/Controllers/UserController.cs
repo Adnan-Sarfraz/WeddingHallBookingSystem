@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WeddingHall.Application.Common;
 using WeddingHall.Application.DTOs.SignIn;
 using WeddingHall.Application.DTOs.UserRegistration;
 using WeddingHall.Application.Interfaces;
@@ -14,34 +15,21 @@ namespace WeddingHall.API.Controllers
         {
             _userService = userService;
         }
-
-        //POST/api/User/register 
+ 
         [HttpPost("register")]
         public async Task<IActionResult> Register ([FromBody]UserRegistrationRequest request)// from (DTOs)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(ApiResponse<object>.FailureResponse("Invalid request data"));
             }
             var result = await _userService.RegisterUserAsync(request);
             if (!result)
             {
-                return BadRequest(new
-                {
-                    success = false,
-                    message= "EMAIL ALREADY EXSISTS!"
-
-                });
+                return BadRequest(ApiResponse<bool>.FailureResponse("Email already exists"));
 
             }
-            return Ok(new 
-            {
-                success= true,
-                message= "USER SUCCESSFULLY REGISTERED!"
-
-            });
-
-
+            return Ok(ApiResponse<bool>.SuccessResponse(true, "User registered successfully"));
 
         }
         [HttpPost("SignIn")]
@@ -50,9 +38,11 @@ namespace WeddingHall.API.Controllers
             var result = await _userService.SignInAsync(request);
 
             if (result == null)
-                return Unauthorized("Invalid email or password");
+            {
+                return Unauthorized(ApiResponse<object>.FailureResponse("Invalid email or password"));
+            }
 
-            return Ok(result);
+            return Ok(ApiResponse<object>.SuccessResponse(result, "User signed in successfully"));
         }
 
     }

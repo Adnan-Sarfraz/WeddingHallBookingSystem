@@ -13,7 +13,7 @@ namespace WeddingHall.Domain
         public DateTime Inserted_Date { get; set; }
         public DateTime? Updated_Date { get; set;}
 
-        public bool isActive    { get; set; }
+        public bool isActive { get; set; }
 
 
     }
