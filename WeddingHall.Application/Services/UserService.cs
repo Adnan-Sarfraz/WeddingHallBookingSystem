@@ -6,15 +6,12 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using WeddingHall.Application.DTOs.SignIn;
 using WeddingHall.Application.DTOs.UserRegistration;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Application.Interfaces.Repositories;
 using WeddingHall.Domain;
 using AutoMapper;
-
-
 
 namespace WeddingHall.Infrastructure.Services
 {

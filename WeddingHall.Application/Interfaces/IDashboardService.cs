@@ -11,13 +11,6 @@ namespace WeddingHall.Application.Interfaces
 {
     public interface IDashboardService
     {
-        Task<int> GetNewRequestCountAsync();
-        Task<int> GetTodayBookingCountAsync();
-        Task<decimal> GetTodayBookingTotalAmountAsync();
-        Task<int> GetNext15DaysBookingCountAsync();
-        Task<decimal> GetNext15DaysBookingTotalAmountAsync();
-
-        // Optional: Return combined DTO for dashboard
         Task<DashboardResponse> GetDashboardAsync();
     }
    

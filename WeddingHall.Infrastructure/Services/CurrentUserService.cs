@@ -28,7 +28,6 @@ namespace WeddingHall.Infrastructure.Services
                     .Value;
                 if (Guid.TryParse(UserId, out var paresedUserId))
                     return paresedUserId;
-                //return UserId != null ? Guid.Parse(UserId) : null;  
                 return null;
             }
         }

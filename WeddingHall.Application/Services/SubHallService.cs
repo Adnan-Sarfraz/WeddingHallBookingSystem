@@ -29,7 +29,6 @@ namespace WeddingHall.Infrastructure.Services
             _subHallServiceRepo = subHallServiceRepo;
         }
 
-        //CREATE
         public async Task<bool> CreateAsync(SubHallCreateRequest request)
         {
             //  Check Hall exists
@@ -40,9 +39,6 @@ namespace WeddingHall.Infrastructure.Services
             // Create SubHall
             var model = _mapper.Map<SubHallDetail>(request);
             model.GUID = Guid.NewGuid();
-            //model.Inserted_Date = DateTime.Now;
-            //model.isActive = true;
-
             await _subHallRepository.AddAsync(model);
             await _subHallRepository.SaveChangesAsync();
 
@@ -56,8 +52,6 @@ namespace WeddingHall.Infrastructure.Services
                         GUID = Guid.NewGuid(),
                         SubHall_Id = model.GUID,
                         Service_Id = serviceId,
-                       // Inserted_Date = DateTime.Now,
-                        //isActive = true
                     };
 
                     await _subHallServiceRepo.AddAsync(associate);
@@ -69,9 +63,6 @@ namespace WeddingHall.Infrastructure.Services
             return true;
         }
 
-      
-
-        //UPDATE
         public async Task<bool> UpdateAsync(SubHallUpdateRequest request)
         {
             var model = (await _subHallRepository
@@ -83,8 +74,6 @@ namespace WeddingHall.Infrastructure.Services
 
             //Update time automatically
             _mapper.Map(request, model);
-           // model.Updated_Date = DateTime.Now;
-
             _subHallRepository.Update(model);
             await _subHallRepository.SaveChangesAsync();
 
@@ -109,8 +98,6 @@ namespace WeddingHall.Infrastructure.Services
                         GUID = Guid.NewGuid(),
                         SubHall_Id = model.GUID,
                         Service_Id = serviceId,
-                       // Inserted_Date = DateTime.Now,
-                        //isActive = true
                     };
 
                     await _subHallServiceRepo.AddAsync(associate);
@@ -130,14 +117,11 @@ namespace WeddingHall.Infrastructure.Services
                 return false;
 
             model.isActive = false; // Soft delete
-            //model.Updated_Date = DateTime.Now;
 
             _subHallRepository.Update(model);
             await _subHallRepository.SaveChangesAsync();
             return true;
         }
-
-
 
         //GET_BY_ID
         public async Task<SubHallResponse?> GetByIdAsync(Guid guid)

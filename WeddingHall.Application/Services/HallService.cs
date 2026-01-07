@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 using WeddingHall.Application.DTOs.Hall;
 using WeddingHall.Application.Interfaces;
 using WeddingHall.Application.Interfaces.Repositories;
 using WeddingHall.Domain;
 
-namespace WeddingHall.Infrastructure.Services
+namespace WeddingHall.Application.Services
 {
     public class HallService : IHallService
     {
-        //private readonly ApplicationDbContext _db;
         private readonly IHallRepository _hallRepository; //handles database CRUD operations 
         private readonly IMapper _mapper; //injecting automapper 
 
@@ -20,7 +19,6 @@ namespace WeddingHall.Infrastructure.Services
 
         }
 
-        //creation of new HallMaster ( POST )
         public async Task<bool> CreateHallAsync(HallCreateRequest request)
         {
             var hall = _mapper.Map<HallMaster>(request);
@@ -31,8 +29,6 @@ namespace WeddingHall.Infrastructure.Services
             return true;
         }
 
-
-        //Get All Halls( GET )
         public async Task<List<HallResponse>> GetAllHallsAsync()
         {
             var halls = await _hallRepository.GetAllWithDetailsAsync();
@@ -41,9 +37,6 @@ namespace WeddingHall.Infrastructure.Services
 
         }
 
-
-
-        //Get by ID ( GET )
         public async Task<HallResponse?> GetHallByIdAsync(Guid id)
         {
             var hall = await _hallRepository.GetByIdWithDetailsAsync(id);
@@ -54,8 +47,6 @@ namespace WeddingHall.Infrastructure.Services
             return _mapper.Map<HallResponse>(hall); //Automapper used 
         }
 
-
-        //Update Hall ( PUT )
         public async Task<bool> UpdateHallAsync(HallUpdateRequest request)
         {
             var hall = await _hallRepository.GetByIdAsync(request.GUID);
@@ -65,9 +56,6 @@ namespace WeddingHall.Infrastructure.Services
 
             _mapper.Map(request, hall);
 
-           // hall.Updated_By = request.Updated_By;
-           // hall.Updated_Date = DateTime.Now;
-
             _hallRepository.Update(hall);
             await _hallRepository.SaveChangesAsync();
 
@@ -75,8 +63,6 @@ namespace WeddingHall.Infrastructure.Services
 
         }
 
-
-        //Delete Hall ( DELETE )
         public async Task<bool> DeleteHallAsync(Guid id)
         {
             var hall = await _hallRepository.GetByIdAsync(id);
@@ -84,9 +70,8 @@ namespace WeddingHall.Infrastructure.Services
             if (hall == null)
                 return false;
 
-            //hall.Updated_Date = DateTime.Now;
 
-            hall.isActive = false; //this directly/softly deletes 
+            hall.isActive = false; 
             _hallRepository.Update(hall);
             await _hallRepository.SaveChangesAsync();
             return true;

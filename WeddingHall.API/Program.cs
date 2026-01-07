@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using WeddingHall.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 const string FrontendCors = "FrontendCors";
@@ -87,6 +88,10 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IDropdownService, DropdownService>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IDropdownRepository, DropdownRepository>();
+
+
 
 
 //Repository layer 
@@ -111,12 +116,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-
-        //ValidIssuer = jwtSettings["Issuer"],
-        //ValidAudience = jwtSettings["Audience"],
-        //IssuerSigningKey = new SymmetricSecurityKey(
-        //    Encoding.UTF8.GetBytes(jwtSettings["Key"]!)
-        //)
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
@@ -125,12 +124,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-//builder.Services.AddDbContext<ApplicationDbContext>();
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 
